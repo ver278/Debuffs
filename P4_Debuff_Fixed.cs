@@ -29,11 +29,11 @@ using System.Numerics;
 using Status = Lumina.Excel.Sheets.Status;
 using UIColor = ECommons.ChatMethods.UIColor;
 
-namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad;
+namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad_Fixed;
 
-public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
+public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.Config>
 {
-    public override Metadata Metadata { get; } = new(15, "NightmareXIV, mirage");
+    public override Metadata Metadata { get; } = new(16, "NightmareXIV, mirage");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
