@@ -33,7 +33,7 @@ namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad_Fixed;
 
 public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.Config>
 {
-    public override Metadata Metadata { get; } = new(12, "P4DebuffFix");
+    public override Metadata Metadata { get; } = new(11, "P4DebuffFixed");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
@@ -293,7 +293,6 @@ public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.
             if(BasePlayer.HasStatus(Debuffs.DebuffDonut, out var time, lessThan: C.DonutAOETH))
             {
                 var h = !FakeStatuses.ContainsAny(Debuffs.DebuffDonut.Select(s => new StatusInfo(BasePlayer.ObjectId, s))) ? Str_DropDonut($"{time.SafeSelect(0).Time:F1}") : Str_DropAOE($"{time.SafeSelect(0).Time:F1}");
-                //hints.Add((h, time.SafeSelect(0).Time));
                 DisplayMiddleDropIfNeeded(h);
             }
         }
@@ -301,7 +300,6 @@ public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.
             if(BasePlayer.HasStatus(Debuffs.DebuffFireSpread, out var time, lessThan: C.DonutAOETH))
             {
                 var h = !FakeStatuses.ContainsAny(Debuffs.DebuffFireSpread.Select(s => new StatusInfo(BasePlayer.ObjectId, s))) ? Str_DropAOE($"{time.SafeSelect(0).Time:F1}") : Str_DropDonut($"{time.SafeSelect(0).Time:F1}");
-                //hints.Add((h, time.SafeSelect(0).Time));
                 DisplayMiddleDropIfNeeded(h);
             }
         }
@@ -368,23 +366,17 @@ public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.
         }
     }
 
-    public bool IsLie = false;
-
-    public override void OnActionEffectEvent(ActionEffectSet set)
-    {
-        if(set.Action != null && set.Source?.ObjectId.EqualsAny(IsTruth.Keys) == true)
-        {
-            IsLie = !IsTruth[set.Source.ObjectId];
-        }
-    }
-
     public override void OnGainBuffEffect(uint sourceId, FFXIVClientStructs.FFXIV.Client.Game.Status Status)
     {
         if(!PhaseActive) return;
         if(DebuffList.Contains(Status.StatusId) && sourceId.TryGetPlayer(out var pc))
         {
-            // Determine per-source lie value: if we have truth info for this source, use it; otherwise fall back to global IsLie
-            var isLieForSource = IsTruth.TryGetValue(sourceId, out var truth) ? !truth : IsLie;
+            if(!IsTruth.TryGetValue(sourceId, out var truth))
+            {
+                return;
+            }
+
+            var isLieForSource = !truth;
 
             if(isLieForSource)
             {
@@ -503,7 +495,7 @@ public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.
                     {
                         if(C.OutputInChat)
                         {
-                            enqueue(!isLieForSource?UIColor.Red:(UIColor)16, (isLieForSource ? C.Other_LongGazeInv.Get() : C.Other_LongGaze.Get()), $"{pc.Name}");
+                            enqueue(!isLieForSource ? UIColor.Red : (UIColor)16, (isLieForSource ? C.Other_LongGazeInv.Get() : C.Other_LongGaze.Get()), $"{pc.Name}");
                         }
                     }
                     else
@@ -736,7 +728,6 @@ public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.
                 FakeStatuses = JsonConvert.DeserializeObject<List<StatusInfo>>(GenericHelpers.Paste()) ?? throw new NullReferenceException();
             }
 
-            ImGui.Checkbox(nameof(IsLie), ref IsLie);
             ImGuiEx.Text($"List: {DebuffList.Print()}");
             ImGuiEx.Text($"Casters: {IsTruth.Select(x => $"{x.Key}: {x.Value}").Print("\n")}");
             ImGuiEx.Text($"Fakes: \n{FakeStatuses.Select(x => $"{x.objectId.GetObject()} / {x.statusId} ({Svc.Data.GetExcelSheet<Status>().GetRowOrDefault(x.statusId)?.Name})").Print("\n")}");
