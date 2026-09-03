@@ -33,7 +33,7 @@ namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad_Fixed;
 
 public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.Config>
 {
-    public override Metadata Metadata { get; } = new(22, "P4DebuffFixFinal");
+    public override Metadata Metadata { get; } = new(22, "P4DebuffFixFinalF");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
