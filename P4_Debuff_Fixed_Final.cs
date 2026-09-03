@@ -29,11 +29,11 @@ using System.Numerics;
 using Status = Lumina.Excel.Sheets.Status;
 using UIColor = ECommons.ChatMethods.UIColor;
 
-namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad_Fixed;
+namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad_New;
 
-public class P4_Debuff_Reminder_Fixed : SplatoonScript<P4_Debuff_Reminder_Fixed.Config>
+public class P4_Debuff_Reminder_New : SplatoonScript<P4_Debuff_Reminder_New.Config>
 {
-    public override Metadata Metadata { get; } = new(22, "P4DebuffFixFinalF");
+    public override Metadata Metadata { get; } = new(1, "P4DebuffReminderNew");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
